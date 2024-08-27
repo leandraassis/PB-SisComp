@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from './AuthContext';
 import { LogarUsuario } from '../../infra/usuarios';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
   async function handleClick(event) {
     event.preventDefault();
-    localStorage.setItem('email', email);
-    localStorage.setItem('senha', senha);
-
+    
     try {
       let usuario = await LogarUsuario(email, senha);
       if (usuario.id) {
+        login(email, senha);
         alert(`Login efetuado com sucesso! Id: ${usuario.id}`);
-        navigate('/', { replace: true }); // redireciona pra page principal depois do login
+        navigate('/', { replace: true });
       } else {
         alert(usuario.erro);
       }

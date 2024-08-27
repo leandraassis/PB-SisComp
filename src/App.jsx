@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import './index.css';
@@ -10,33 +10,21 @@ import Contatos from './pages/Contatos';
 import Produtos from './pages/Produtos';
 import Cotacoes from './pages/Cotacoes';
 import NotFound from './pages/NotFound';
-import Requisicoes from './pages/Requisicoes';
-import LoginPage from './pages/Login';
 import Conta from './pages/Conta';
+import Requisicoes from './pages/Requisicoes';
+import Login from './components/login/Login';
 import RotaProtegida from './components/login/RotaProtegida';
-
-//por enquanto, a conta ADM será chumbada no código
-const ADM = {
-  email: "primeiroADM@gmail.com",
-  senha: "adm123",
-  isADM: true
-};
+import { AuthContext } from './components/login/AuthContext';
 
 function App() {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-
-  useEffect(() => {
-    setEmail(localStorage.getItem('email') || '');
-    setSenha(localStorage.getItem('senha') || '');
-  }, []);
+  const { autenticado } = useContext(AuthContext);
 
   return (
     <Router>
       <Routes>
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/' element={email === ADM.email && senha === ADM.senha ? <Layout /> : <LayoutColaborador />}>
-          <Route path='/' element={
+        <Route path='/login' element={<Login />} />
+        <Route path='/' element={autenticado ? <Layout /> : <LayoutColaborador />}>
+          <Route index element={
             <RotaProtegida>
               <Home />
             </RotaProtegida>
