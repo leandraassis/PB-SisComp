@@ -16,12 +16,6 @@ import Conta from './pages/Conta';
 import RotaProtegida from './components/login/RotaProtegida';
 
 //por enquanto, a conta ADM será chumbada no código
-const ADM = {
-  email: "primeiroADM@gmail.com",
-  senha: "adm123",
-  isADM: true
-};
-
 function App() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -35,7 +29,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/login' element={<LoginPage />} />
-        <Route path='/' element={email === ADM.email && senha === ADM.senha ? <Layout /> : <LayoutColaborador />}>
+        <Route path='/' element={email === "primeiroADM@gmail.com" && senha === "adm123" ? <Layout /> : <LayoutColaborador />}>
           <Route path='/' element={
             <RotaProtegida>
               <Home />
