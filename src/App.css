@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@tailwind components;
+
+@layer components {
+  
+  .containerPai {
+    @apply flex flex-col justify-center border w-[80%] m-auto mt-32;
+  }
+  
+  .itemLista {
+    @apply w-[20%] flex h-full justify-center items-center cursor-pointer font-bold;
+  }
+
+  .itemLista:hover {
+    @apply bg-slate-500 text-white;
+  }
+  
+  .titulo {
+    @apply pl-2 w-[50%] text-lg bg-slate-200 w-full p-2 text-center font-bold;
+  }
+
+  .containerForm {
+    @apply flex flex-col items-center justify-center text-center w-[40%];
+  }
+
+  .inputForm {
+    @apply border border-slate-500 rounded-lg pl-2 w-[50%];
+  }
+
+  .containerLista {
+    @apply w-[60%] border-l-2;
+  }
+
+  .botoes {
+    @apply m-5 bg-slate-300 p-1.5 rounded-lg cursor-pointer;
+  }
+
+  .botoes:hover {
+    @apply bg-slate-500 text-white;
+  }
+
+  .seletor {
+    @apply bg-slate-300 p-1.5 rounded-lg cursor-pointer w-[50%];
+  }
+
+  .input {
+    @apply w-[30%] p-1.5 rounded-lg border;
+  }
+
+}
