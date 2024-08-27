@@ -14,7 +14,13 @@ import Conta from './pages/Conta';
 import Requisicoes from './pages/Requisicoes';
 import Login from './components/login/Login';
 import RotaProtegida from './components/login/RotaProtegida';
-import { AuthContext } from './components/login/AuthContext';
+
+//por enquanto, a conta ADM será chumbada no código
+const ADM = {
+  email: "primeiroADM@gmail.com",
+  senha: "adm123",
+  isADM: true
+};
 
 function App() {
   const { autenticado } = useContext(AuthContext);
@@ -22,9 +28,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/login' element={<Login />} />
-        <Route path='/' element={autenticado ? <Layout /> : <LayoutColaborador />}>
-          <Route index element={
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/' element={email === ADM.email && senha === ADM.senha ? <Layout /> : <LayoutColaborador />}>
+          <Route path='/' element={
             <RotaProtegida>
               <Home />
             </RotaProtegida>
