@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { atualizarCotacao, deletarCotacao, inserirCotacao, obterCotacao } from "../../infra/cotacoes";
 import { listarProdutos } from "../../infra/produtos";
 import { listarFornecedores } from "../../infra/fornecedores";
-import { listarRequisicoes } from "../../infra/requisicoes";
+import { atualizarRequisicao, listarRequisicoes, obterRequisicao } from "../../infra/requisicoes";
 import { useEffect, useState } from "react";
 
 export default function FormContato({ idEditando, setIdEditando }) {
@@ -16,8 +16,10 @@ export default function FormContato({ idEditando, setIdEditando }) {
     useEffect(() => {
         async function fetchData() {
             const requisicoesLista = await listarRequisicoes();
-            setRequisicoes(requisicoesLista);
-            
+            const requisicoesFiltradas = requisicoesLista.filter(requisicao => {
+                return requisicao.cotacoes.length < 3;
+            });
+            setRequisicoes(requisicoesFiltradas);
             const fornecedoresLista = await listarFornecedores();
             setFornecedores(fornecedoresLista);
 
@@ -39,16 +41,50 @@ export default function FormContato({ idEditando, setIdEditando }) {
         fetchData();
     }, [idEditando]);
 
-    async function submeterDados(dados) {
-        if (idEditando) {
-            await atualizarCotacao({ ...dados, id: idEditando });
-            setIdEditando("");
-        } else {
-            let id = await inserirCotacao(dados);
-            setIdEditando(id);
+    async function cotarRequisicoes(cotacaoId) {
+        const cotacaoAtual = await obterCotacao(cotacaoId);
+        const requisicaoId = cotacaoAtual.requisicao;
+        const requisicaoAtual = await obterRequisicao(requisicaoId);
+    
+        const cotacoes = requisicaoAtual.cotacoes;
+        cotacoes.push(cotacaoAtual);
+    
+        let requisicaoComId = {
+            ...requisicaoAtual,
+            cotacoes,
+            id: requisicaoId
+        };
+    
+        if (cotacoes.length > 0 && cotacoes.length <= 2) {
+            requisicaoComId = {
+                ...requisicaoComId,
+                status: "EM COTAÇÃO"
+            };
+        } else if (cotacoes.length >= 3) {
+            requisicaoComId = {
+                ...requisicaoComId,
+                status: "COTADO"
+            };
         }
-        reset();
+        await atualizarRequisicao(requisicaoComId);
     }
+    
+    async function submeterDados(dados) {
+        try {
+            if (idEditando) {
+                await atualizarCotacao({ ...dados, id: idEditando });
+                setIdEditando("");
+            } else {
+                let id = await inserirCotacao(dados);
+                setIdEditando(id);
+                await cotarRequisicoes(id);
+            }
+            reset();
+        } catch (error) {
+            console.error('Erro ao submeter dados:', error);
+        }
+    }
+
 
     async function handleDeletar() {
         await deletarCotacao(idEditando);
@@ -74,7 +110,7 @@ export default function FormContato({ idEditando, setIdEditando }) {
                     </select>
 
                     <br />
-                    
+
                     <label htmlFor="produtoId">Produto</label>&nbsp;
                     <br />
                     <select className="seletor" {...register("produtoId", {

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import { LogarUsuario } from '../../infra/usuarios';
 
@@ -37,7 +37,7 @@ export default function Login() {
         id="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="input"
+        className="input w-[35%]"
       />
       <label htmlFor="senha">Senha</label>
       <input
@@ -45,15 +45,16 @@ export default function Login() {
         id="senha"
         value={senha}
         onChange={(e) => setSenha(e.target.value)}
-        className="input"
+        className="input w-[35%]"
       />
       <br />
       <button
         onClick={handleClick}
-        className="w-[30%] bg-slate-300 hover:bg-slate-400 hover:text-white border p-2 rounded-lg"
+        className="w-[35%] bg-slate-300 hover:bg-slate-400 hover:text-white border p-2 rounded-lg"
       >
         Conectar
       </button>
+      <button className="mt-5 font-bold text-slate-500" onClick={() => navigate('/criarConta', { replace: true })}>Criar conta</button>
     </div>
   );
 }

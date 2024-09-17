@@ -1,11 +1,13 @@
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { atualizarRequisicao, deletarRequisicao, inserirRequisicao, obterRequisicao } from "../../infra/requisicoes";
+import { AuthContext } from "../login/AuthContext";
 
 
 export default function FormRequisicao({ idEditando, setIdEditando }) {
 
     const { register, handleSubmit, formState: { errors, isSubmitted }, reset, setValue } = useForm();
+    const { autenticado, email } = useContext(AuthContext);
 
     useEffect(() => {
         async function fetchData() {
@@ -17,6 +19,9 @@ export default function FormRequisicao({ idEditando, setIdEditando }) {
                 setValue("status", requisicao.status);
             } else {
                 reset();
+                if (!autenticado) {
+                    setValue("solicitante", email);
+                }
             }
         }
 
@@ -28,7 +33,7 @@ export default function FormRequisicao({ idEditando, setIdEditando }) {
             await atualizarRequisicao({ ...dados, id: idEditando });
             setIdEditando("");
         } else {
-            let id = await inserirRequisicao({ ...dados, status: "Aberta" });
+            let id = await inserirRequisicao({ ...dados, status: "Aberta", cotacoes: [] });
             setIdEditando(id);
         }
         reset();
@@ -51,7 +56,9 @@ export default function FormRequisicao({ idEditando, setIdEditando }) {
                             minLength: (value) => value.length >= 5 || "Solicitante precisa ter no mínimo 5 caracteres",
                             maxLength: (value) => value.length <= 50 || "Solicitante só pode ter, no máximo, 50 caracteres",
                         },
-                    })} />
+                    })}
+                        readOnly={!autenticado}
+                    />
                     <br />
 
                     <label htmlFor="produto">Produto</label>&nbsp;
@@ -76,7 +83,7 @@ export default function FormRequisicao({ idEditando, setIdEditando }) {
                     })} />
 
                     <br />
-                    
+
                     <input className="botoes" type="submit" value="Salvar" />
                     {idEditando && (
                         <input className="botoes" type="button" value="Deletar" onClick={handleDeletar} />

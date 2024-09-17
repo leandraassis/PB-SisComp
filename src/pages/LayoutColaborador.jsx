@@ -10,7 +10,10 @@ export default function LayoutColaborador() {
                             <Link to={"/"}>Início</Link>
                         </li>
                         <li className="itemLista">
-                            <Link to={"/requisicoes"}>Requições</Link>
+                            <Link to={"/requisicoes"}>Minhas requições</Link>
+                        </li>
+                        <li className="itemLista">
+                            <Link to={"/cotacoes"}>Minhas cotacoes</Link>
                         </li>
                         <li className="itemLista">
                             <Link to={"/conta"}>Conta</Link>

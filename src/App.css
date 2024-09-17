@@ -47,7 +47,7 @@
   }
 
   .input {
-    @apply w-[30%] p-1.5 rounded-lg border;
-  }
+    @apply block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 sm:text-sm;
+}
 
 }

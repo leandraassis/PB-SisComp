@@ -1,11 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { listarUsuarios } from '../../infra/usuarios';
 
 export const AuthContext = createContext();
-
-const ADM = {
-  email: "primeiroadm@gmail.com",
-  senha: "adm123",
-};
 
 export const AuthProvider = ({ children }) => {
   const [email, setEmail] = useState('');
@@ -13,21 +9,37 @@ export const AuthProvider = ({ children }) => {
   const [autenticado, setAutenticado] = useState(false);
 
   useEffect(() => {
-    const armzndEmail = localStorage.getItem('email');
-    const armzndSenha = localStorage.getItem('senha');
-    if (armzndEmail && armzndSenha) {
-      setEmail(armzndEmail);
-      setSenha(armzndSenha);
-      setAutenticado(armzndEmail === ADM.email && armzndSenha === ADM.senha);
-    }
+    const carregarAutenticacao = async () => {
+      const armzndEmail = localStorage.getItem('email');
+      const armzndSenha = localStorage.getItem('senha');
+      if (armzndEmail && armzndSenha) {
+        setEmail(armzndEmail);
+        setSenha(armzndSenha);
+        const listaUsuario = await listarUsuarios();
+        const usuario = listaUsuario.find(
+          usuario => usuario.email === armzndEmail && usuario.senha === armzndSenha
+        );
+        setAutenticado(usuario ? usuario.isAdmin : false);
+      }
+    };
+
+    carregarAutenticacao();
   }, []);
 
-  const login = (email, senha) => {
-    localStorage.setItem('email', email);
-    localStorage.setItem('senha', senha);
-    setEmail(email);
-    setSenha(senha);
-    setAutenticado(email === ADM.email && senha === ADM.senha);
+  const login = async (email, senha) => {
+    const listaUsuario = await listarUsuarios();
+    const usuario = listaUsuario.find(
+      usuario => usuario.email === email && usuario.senha === senha
+    );
+    if (usuario) {
+      localStorage.setItem('email', email);
+      localStorage.setItem('senha', senha);
+      setEmail(email);
+      setSenha(senha);
+      setAutenticado(usuario.isAdmin);
+    } else {
+      alert('Usuário ou senha inválidos');
+    }
   };
 
   const logout = () => {

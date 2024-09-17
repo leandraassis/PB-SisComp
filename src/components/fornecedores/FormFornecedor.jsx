@@ -74,7 +74,6 @@ export default function FormFornecedor({ idEditando, setIdEditando }) {
                         },
                     })} />
                     <br />
-
                     <input className="botoes" type="submit" value="Salvar" />
                     {idEditando && (
                         <input className="botoes" type="button" value="Deletar" onClick={handleDeletar} />

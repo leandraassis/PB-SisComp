@@ -15,6 +15,7 @@ import Login from './components/login/Login';
 import Conta from './pages/Conta';
 import RotaProtegida from './components/login/RotaProtegida';
 import { AuthContext } from './components/login/AuthContext';
+import CriarContaPage from './pages/CriarConta';
 
 function App() {
   const { autenticado } = useContext(AuthContext);
@@ -23,6 +24,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/login' element={<Login />} />
+        <Route path='/criarConta' element={<CriarContaPage />} />
         <Route path='/' element={autenticado ? <Layout /> : <LayoutColaborador />}>
           <Route index element={
             <RotaProtegida>
