@@ -3,7 +3,7 @@ import { regexNumerico } from "../../assets/Regex";
 import { useEffect } from "react";
 import { atualizarFornecedor, deletarFornecedor, inserirFornecedor, obterFornecedor } from "../../infra/fornecedores";
 
-export default function FormFornecedor({ idEditando, setIdEditando }) {
+export default function FormFornecedor({ idEditando, setIdEditando, fornecedoresAtualizados }) {
 
     const { register, handleSubmit, formState: { errors, isSubmitted }, reset, setValue } = useForm();
 
@@ -25,16 +25,18 @@ export default function FormFornecedor({ idEditando, setIdEditando }) {
     async function submeterDados(dados) {
         if (idEditando) {
             await atualizarFornecedor({ ...dados, id: idEditando });
-            setIdEditando("");
         } else {
             let id = await inserirFornecedor(dados);
             setIdEditando(id);
         }
+        setIdEditando("");
         reset();
+        fornecedoresAtualizados();
     }
 
     async function handleDeletar() {
         await deletarFornecedor(idEditando);
+        fornecedoresAtualizados();
         setIdEditando("");
     }
 
@@ -74,7 +76,7 @@ export default function FormFornecedor({ idEditando, setIdEditando }) {
                         },
                     })} />
                     <br />
-                    <input className="botoes" type="submit" value="Salvar" />
+                    <input className="botoes" type="submit" value={idEditando ? "Atualizar" : "Salvar"} />
                     {idEditando && (
                         <input className="botoes" type="button" value="Deletar" onClick={handleDeletar} />
                     )}

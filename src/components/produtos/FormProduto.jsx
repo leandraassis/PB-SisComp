@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { atualizarProduto, deletarProduto, inserirProduto, obterProduto } from "../../infra/produtos";
 
 
-export default function FormProduto({ idEditando, setIdEditando }) {
+export default function FormProduto({ idEditando, setIdEditando, produtosAtualizados }) {
 
     const { register, handleSubmit, formState: { errors, isSubmitted }, reset, setValue } = useForm();
 
@@ -26,16 +26,18 @@ export default function FormProduto({ idEditando, setIdEditando }) {
     async function submeterDados(dados) {
         if (idEditando) {
             await atualizarProduto({ ...dados, id: idEditando });
-            setIdEditando("");
         } else {
             let id = await inserirProduto(dados);
             setIdEditando(id);
         }
+        setIdEditando("");
         reset();
+        produtosAtualizados(); 
     }
 
     async function handleDeletar() {
         await deletarProduto(idEditando);
+        produtosAtualizados(); 
         setIdEditando("");
     }
 
@@ -82,8 +84,7 @@ export default function FormProduto({ idEditando, setIdEditando }) {
                         required: "Data de validade é obrigatória",
                     })} />
                     <br />
-
-                    <input className="botoes" type="submit" value="Salvar" />
+                    <input className="botoes" type="submit" value={idEditando ? "Atualizar" : "Salvar"} />
                     {idEditando && (
                         <input className="botoes" type="button" value="Deletar" onClick={handleDeletar} />
                     )}

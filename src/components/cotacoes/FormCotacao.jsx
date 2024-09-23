@@ -28,7 +28,9 @@ export default function FormContato({ idEditando, setIdEditando }) {
 
             if (idEditando && !isSubmitted) {
                 const cotacao = await obterCotacao(idEditando);
-                setValue("requisicaoId", cotacao.requisicaoId);
+                console.log('Cotação obtida:', cotacao);
+                console.log('Requisicao:', cotacao.requisicao);
+                setValue("requisicao", cotacao.requisicao);
                 setValue("data", cotacao.data);
                 setValue("preco", cotacao.preco);
                 setValue("produtoId", cotacao.produtoId);
@@ -73,13 +75,13 @@ export default function FormContato({ idEditando, setIdEditando }) {
         try {
             if (idEditando) {
                 await atualizarCotacao({ ...dados, id: idEditando });
-                setIdEditando("");
             } else {
                 let id = await inserirCotacao(dados);
                 setIdEditando(id);
                 await cotarRequisicoes(id);
             }
             reset();
+            setIdEditando("");
         } catch (error) {
             console.error('Erro ao submeter dados:', error);
         }
@@ -104,7 +106,7 @@ export default function FormContato({ idEditando, setIdEditando }) {
                         <option value="">Selecione uma requisicao</option>
                         {requisicoes.map(requisicao => (
                             <option key={requisicao.id} value={requisicao.id}>
-                                {requisicao.solicitante}
+                                {`${requisicao.solicitante} | ${requisicao.produto} | ${requisicao.status} `} 
                             </option>
                         ))}
                     </select>

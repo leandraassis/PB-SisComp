@@ -1,6 +1,13 @@
 import { auth, db } from '../infra/firebase.js';
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+
+
+function navegar() {
+  const navigate = useNavigate();
+  navigate('/login');
+}
 
 export async function LogarUsuario(email, senha) {
   let retorno = new Object();
@@ -20,7 +27,7 @@ export async function LogarUsuario(email, senha) {
 
 export async function DeslogarUsuario() {
   await auth.signOut();
-  navigate('/login', { replace: true });
+  navegar();
 }
 
 export async function CriaConta(email, senha) {
@@ -41,7 +48,7 @@ export async function CriaConta(email, senha) {
 
 export async function inserirUsuario(novoUsuario) {
   const usuariosRef = collection(db, "usuarios");
-  const docRef = doc(usuariosRef, novoUsuario.id);
+  const docRef = doc(usuariosRef, novoUsuario.id); 
   await setDoc(docRef, novoUsuario);
   return docRef;
 }

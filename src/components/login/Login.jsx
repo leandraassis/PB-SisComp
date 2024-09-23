@@ -11,13 +11,16 @@ export default function Login() {
 
   async function handleClick(event) {
     event.preventDefault();
-    
     try {
       let usuario = await LogarUsuario(email, senha);
       if (usuario.id) {
-        login(email, senha);
-        alert(`Login efetuado com sucesso! Id: ${usuario.id}`);
-        navigate('/', { replace: true });
+        const loginSucedido = await login(email, senha); 
+        if (loginSucedido) {
+          alert(`Login efetuado com sucesso! Id: ${usuario.id}`);
+          navigate('/', { replace: true });
+        } else {
+          alert("Sua conta foi bloqueada, você perdeu o acesso.");
+        }
       } else {
         alert(usuario.erro);
       }

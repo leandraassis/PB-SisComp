@@ -1,25 +1,24 @@
+import compras from "../assets/compras.jpg";
+
 export default function Home() {
-
     return (
-        //temporario
-        <div className="h-[50vh] flex flex-col items-center justify-center">
-            <h2 className="text-2xl font-bold">Sistema de compras</h2>
-            <p className="text-lg">Bem vindo(a) ao Sistema de Compras da Empresa ACME! </p>
-
-            <p>|</p>
-            <p>Ao filtrar uma cotação, para voltar a lista com todas as cotações, limpe o campo e clique novamente em filtrar.</p>
-            <p>|</p>
-
-            <ul className="text-center">
-                <p><strong>Implementações da atualização:</strong></p>
-                <li>Tela requisições</li>
-                <li>CRUD requisições</li>
-                <li>Login funcional (autenticação)</li>
-                <li>Atualização no layout</li>
-            </ul>
-            <p>|</p>
-            <p>|</p>
-            <span className="text-sm">versão 0.2</span>
-        </div>
+        <>
+            <h1 className="w-full text-center mt-10 text-slate-500 text-5xl">ACME</h1>
+            <div className="w-[100%] h-[100%] flex justify-center items-center mt-20">
+                <div className="flex w-[80%] shadow-lg rounded-lg">
+                    <div className="w-[50%]"> 
+                        <img src={compras} alt="Compras" className="w-full h-auto object-cover rounded-lg"/> 
+                    </div>
+                    <div className="w-[50%] flex flex-col text-center justify-center">
+                        <h2 className="mt-10 font-bold text-slate-500 text-2xl">Bem vindo(a) ao sistema de compras da empresa, colaborador!</h2>
+                        <p className="p-10">
+                            Fazer requisições de compra nunca foi tão fácil, apenas preencha o formulário com o que precisa e
+                            o setor de compras logo te enviará as três melhores cotações para o produto desejado.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <p className="text-center mt-20 text-xs">Projeto de Bloco - Front-end Avançado</p>
+        </>
     );
 }

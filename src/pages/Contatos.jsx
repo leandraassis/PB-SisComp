@@ -9,11 +9,10 @@ export default function Contatos() {
     const [contatos, setContatos] = useState([]);
     const [idEditando, setIdEditando] = useState("");
 
-    //o nome do fornecedor não estava aparecendo, apenas o ID, essa função pega o nome do fornecedor baseado em seu ID e atualiza a lista de contatos
-    useEffect(() => {
-        async function fetchData() {
-            const novaListaContatos = await listarContatos();
-            const contatosCompletos = await Promise.all( //Promise.all --> esperar todas as promessas dentro desse array serem resolvidas. É necessário pq o obterFornecedor(q é uma funcao async) é chamado varias vezes
+    
+    const carregarContatos = async () => {
+        const novaListaContatos = await listarContatos();
+            const contatosCompletos = await Promise.all(
                 novaListaContatos.map(async (contato) => {
                     const fornecedor = await obterFornecedor(contato.fornecedorId);
                     return { ...contato, fornecedorNome: fornecedor.nome };
@@ -21,16 +20,20 @@ export default function Contatos() {
             );
             setContatos(contatosCompletos);
             console.log("listar contatos");
-        }
-        fetchData();
-    }, [idEditando]);
+    };
+
+    useEffect(() => {
+        carregarContatos();
+    }, []); 
+
+
 
     return (
         <div className="containerPai">
             <h2 className="titulo">Contatos</h2>
             <div className="flex justify-between">
                 <div className="containerForm">
-                    <FormContato idEditando={idEditando} setIdEditando={setIdEditando} />
+                    <FormContato idEditando={idEditando} setIdEditando={setIdEditando} contatosAtualizados={carregarContatos} />
                 </div>
                 <div className="containerLista">
                     <ListaContatos contatos={contatos} setIdEditando={setIdEditando} />

@@ -32,7 +32,7 @@ export default function ListaCotacoes({ cotacoes = [], setIdEditando }) {
     const colunas = [
         {
             name: "Requisição",
-            selector: row => row.requisicao,
+            selector: row => row.requisicaoSolicitante,
             sortable: true,
         },
         {

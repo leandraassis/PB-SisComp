@@ -4,7 +4,7 @@ import { atualizarContato, deletarContato, inserirContato, obterContato } from "
 import { listarFornecedores } from "../../infra/fornecedores";
 import { useEffect, useState } from "react";
 
-export default function FormContato({ idEditando, setIdEditando }) {
+export default function FormContato({ idEditando, setIdEditando, contatosAtualizados }) {
 
     const { register, handleSubmit, formState: { errors, isSubmitted }, reset, setValue } = useForm();
 
@@ -32,16 +32,18 @@ export default function FormContato({ idEditando, setIdEditando }) {
     async function submeterDados(dados) {
         if (idEditando) {
             await atualizarContato({ ...dados, id: idEditando });
-            setIdEditando("");
         } else {
             let id = await inserirContato(dados);
             setIdEditando(id);
         }
+        setIdEditando("");
         reset();
+        contatosAtualizados();
     }
 
     async function handleDeletar() {
         await deletarContato(idEditando);
+        contatosAtualizados();
         setIdEditando("");
     }
 
@@ -97,7 +99,7 @@ export default function FormContato({ idEditando, setIdEditando }) {
                         ))}
                     </select>
                         <br />
-                    <input className="botoes" type="submit" value="Salvar" />
+                    <input className="botoes" type="submit" value={idEditando ? "Atualizar" : "Salvar"} />
                     {idEditando && (
                         <input className="botoes" type="button" value="Deletar" onClick={handleDeletar} />
                     )}

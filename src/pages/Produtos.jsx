@@ -9,22 +9,22 @@ export default function Produtos() {
     const [produtos, setProdutos] = useState([]);
     const [idEditando, setIdEditando] = useState("");
 
-    useEffect(() => {
-        async function fetchData() {
-            const novaListaProdutos = await listarProdutos();
+    const carregarProdutos = async () => {
+        const novaListaProdutos = await listarProdutos();
             setProdutos(novaListaProdutos);
             console.log("listar produtos");
-        }
+    };
 
-        fetchData();
-    }, [idEditando]);
+    useEffect(() => {
+        carregarProdutos();
+    }, []); 
 
     return (
         <div className="containerPai">
             <h2 className="titulo">Produtos</h2>
             <div className="flex justify-between">
                 <div className="containerForm">
-                    <FormProduto idEditando={idEditando} setIdEditando={setIdEditando} />
+                    <FormProduto idEditando={idEditando} setIdEditando={setIdEditando} produtosAtualizados={carregarProdutos}/>
                 </div>
                 <div className="containerLista">
                     <ListaProdutos produtos={produtos} setIdEditando={setIdEditando} />

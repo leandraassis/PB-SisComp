@@ -4,7 +4,7 @@ import { atualizarRequisicao, deletarRequisicao, inserirRequisicao, obterRequisi
 import { AuthContext } from "../login/AuthContext";
 
 
-export default function FormRequisicao({ idEditando, setIdEditando }) {
+export default function FormRequisicao({ idEditando, setIdEditando, requisicoesAtualizadas }) {
 
     const { register, handleSubmit, formState: { errors, isSubmitted }, reset, setValue } = useForm();
     const { autenticado, email } = useContext(AuthContext);
@@ -15,7 +15,7 @@ export default function FormRequisicao({ idEditando, setIdEditando }) {
                 const requisicao = await obterRequisicao(idEditando);
                 setValue("solicitante", requisicao.solicitante);
                 setValue("produto", requisicao.produto);
-                setValue("descricao", requisicao.observacoes);
+                setValue("descricao", requisicao.descricao);
                 setValue("status", requisicao.status);
             } else {
                 reset();
@@ -31,16 +31,17 @@ export default function FormRequisicao({ idEditando, setIdEditando }) {
     async function submeterDados(dados) {
         if (idEditando) {
             await atualizarRequisicao({ ...dados, id: idEditando });
-            setIdEditando("");
         } else {
-            let id = await inserirRequisicao({ ...dados, status: "Aberta", cotacoes: [] });
-            setIdEditando(id);
+            await inserirRequisicao({ ...dados, status: "Aberta", cotacoes: [] });
         }
-        reset();
+        setIdEditando("");
+        setValue('produto', '');
+        setValue('descricao', '');
+        requisicoesAtualizadas(); 
     }
-
     async function handleDeletar() {
         await deletarRequisicao(idEditando);
+        requisicoesAtualizadas(); 
         setIdEditando("");
     }
 
@@ -81,10 +82,8 @@ export default function FormRequisicao({ idEditando, setIdEditando }) {
                             maxLength: (value) => value.length <= 500 || "Descrição só pode ter, no máximo, 100 caracteres",
                         },
                     })} />
-
                     <br />
-
-                    <input className="botoes" type="submit" value="Salvar" />
+                    <input className="botoes" type="submit" value={idEditando ? "Atualizar" : "Salvar"} />
                     {idEditando && (
                         <input className="botoes" type="button" value="Deletar" onClick={handleDeletar} />
                     )}

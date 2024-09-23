@@ -10,7 +10,7 @@ export default function CriarConta() {
   const [isAdmin, setIsAdmin] = useState(false);
   const { autenticado } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  
   async function handleClick(event) {
     event.preventDefault();
 
@@ -23,6 +23,7 @@ export default function CriarConta() {
             email: email,
             senha: senha,
             isAdmin: isAdmin,
+            blocked: false,
             id: usuario.id
           }
           await inserirUsuario(novoUsuario);
@@ -40,6 +41,7 @@ export default function CriarConta() {
   }
 
   const navegarClick = () => {
+    
     if (autenticado) {
         navigate('/conta');
     } else {
@@ -50,7 +52,7 @@ export default function CriarConta() {
 
   return (
     <div className="flex items-center justify-center min-h-screen font-mono">
-      <div className="flex w-[50%] h-[50%]">
+      <div className="flex w-[50%] h-[50%] shadow-lg">
         <div className="w-[50%] bg-slate-300 flex items-center justify-center flex-col gap-10">
           <p className="text-2xl font-bold text-slate-600">CRIE SUA CONTA</p>
           <p className="text-slate-600">Adicione um email e pense em uma boa senha!</p>

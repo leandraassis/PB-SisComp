@@ -4,7 +4,7 @@ import { obterProduto } from "../infra/produtos";
 import ListaCotacoes from "../components/cotacoes/ListaCotacoes";
 import FormCotacao from "../components/cotacoes/FormCotacao";
 import { AuthContext } from "../components/login/AuthContext";
-import { listarRequisicoes } from "../infra/requisicoes";
+import { listarRequisicoes, obterRequisicao } from "../infra/requisicoes";
 
 export default function Cotacoes() {
 
@@ -20,7 +20,8 @@ export default function Cotacoes() {
             const cotacoesCompletas = await Promise.all(
                 novaListaCotacoes.map(async (cotacao) => {
                     const produto = await obterProduto(cotacao.produtoId);
-                    return { ...cotacao, produtoNome: produto.nome };
+                    const requisicao = await obterRequisicao(cotacao.requisicao);
+                    return { ...cotacao, produtoNome: produto.nome, requisicaoSolicitante: requisicao.solicitante  };
                 })
             );
             setCotacoes(cotacoesCompletas);

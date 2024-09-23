@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { listarUsuarios } from '../../infra/usuarios';
+import { DeslogarUsuario, listarUsuarios } from '../../infra/usuarios';
 
 export const AuthContext = createContext();
 
@@ -31,18 +31,20 @@ export const AuthProvider = ({ children }) => {
     const usuario = listaUsuario.find(
       usuario => usuario.email === email && usuario.senha === senha
     );
-    if (usuario) {
+    if (usuario && usuario.blocked === false) {
       localStorage.setItem('email', email);
       localStorage.setItem('senha', senha);
       setEmail(email);
       setSenha(senha);
       setAutenticado(usuario.isAdmin);
+      return true;
     } else {
-      alert('Usuário ou senha inválidos');
+      return false;
     }
   };
 
   const logout = () => {
+    DeslogarUsuario();
     localStorage.removeItem('email');
     localStorage.removeItem('senha');
     setEmail('');
